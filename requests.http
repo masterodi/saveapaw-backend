@@ -1,0 +1,12 @@
+GET http://localhost:8080/users
+
+GET http://localhost:8080/users/1007c0c0-b6a0-4e0d-9d28-b9a1f8abe100
+
+POST http://localhost:8080/users
+Content-Type: application/json
+{
+    "email": "test1@test.test",
+    "username": "username1"
+}
+
+DELETE http://localhost:8080/users
