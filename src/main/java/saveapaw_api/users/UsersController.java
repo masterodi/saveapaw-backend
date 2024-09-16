@@ -13,11 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import saveapaw_api.users.dtos.UserCreateDTO;
-import saveapaw_api.users.dtos.UserDTO;
-import saveapaw_api.users.dtos.UserDeleteManyDTO;
-import saveapaw_api.users.dtos.UserUpdateDTO;
-
 @RestController
 @RequestMapping("/users")
 public class UsersController {
@@ -28,13 +23,13 @@ public class UsersController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<UserDTO>> getMany() {
+    public ResponseEntity<List<UserDTO.Query>> getMany() {
         var users = service.getMany();
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getOne(@PathVariable String id) {
+    public ResponseEntity<UserDTO.Query> getOne(@PathVariable String id) {
         try {
             var user = service.getOne(id);
             return ResponseEntity.ok(user);
@@ -44,14 +39,14 @@ public class UsersController {
     }
 
     @PostMapping("")
-    public ResponseEntity<UserDTO> create(@RequestBody UserCreateDTO payload) {
+    public ResponseEntity<UserDTO.Query> create(@RequestBody UserDTO.Create payload) {
         var user = service.create(payload);
         URI location = URI.create(user.id());
         return ResponseEntity.created(location).body(user);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UserDTO> update(@PathVariable String id, @RequestBody UserUpdateDTO payload) {
+    public ResponseEntity<UserDTO.Query> update(@PathVariable String id, @RequestBody UserDTO.Update payload) {
         var user = service.update(id, payload);
         URI location = URI.create(user.id());
         return ResponseEntity.created(location).body(user);
@@ -70,12 +65,12 @@ public class UsersController {
     // }
     // }
 
-    @PatchMapping("")
-    public void deleteManyById(@RequestBody UserDeleteManyDTO payload) {
-        if (payload.op().equals("remove")) {
-            service.deleteManyById(payload.ids());
-        }
-    }
+    // @PatchMapping("")
+    // public void deleteManyById(@RequestBody UserDTO. payload) {
+    // if (payload.op().equals("remove")) {
+    // service.deleteManyById(payload.ids());
+    // }
+    // }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteById(@PathVariable String id) {
