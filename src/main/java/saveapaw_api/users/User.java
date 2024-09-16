@@ -33,7 +33,7 @@ public class User {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate createdAt;
 
-    private User() {
+    public User() {
     }
 
     public User(String email, String username, String password) {

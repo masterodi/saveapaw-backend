@@ -1,12 +1,26 @@
-GET http://localhost:8080/users
+GET {{HOST}}/users
 
-GET http://localhost:8080/users/1007c0c0-b6a0-4e0d-9d28-b9a1f8abe100
+GET {{HOST}}/users/1007c0c0-b6a0-4e0d-9d28-b9a1f8abe100
 
-POST http://localhost:8080/users
+POST {{HOST}}/users
 Content-Type: application/json
 {
     "email": "test1@test.test",
-    "username": "username1"
+    "username": "username1",
+    "password": "password"
 }
 
-DELETE http://localhost:8080/users
+DELETE {{HOST}}/users
+
+GET {{HOST}}/categories
+
+GET {{HOST}}/categories/a35fde65-4e3f-41b0-842a-2076b8ef4c6e
+
+POST {{HOST}}/categories
+Content-Type: application/json
+{
+    "name": "category name 1", 
+    "created_by_id": "cc939987-0168-4814-b6ff-695e2436d07c"
+}
+
+DELETE {{HOST}}/categories/a35fde65-4e3f-41b0-842a-2076b8ef4c6e
