@@ -3,7 +3,11 @@ package saveapaw_api.users;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import saveapaw_api.users.exceptions.UserConflictException;
+import saveapaw_api.users.exceptions.UserNotFoundException;
 
 @Service
 public class UsersService {
@@ -17,16 +21,28 @@ public class UsersService {
         return res.stream().map((user) -> mapper.toUserDTO(user)).toList();
     }
 
-    public UserDTO.Query getOne(String id) {
+    public UserDTO.Query getOne(String id) throws UserNotFoundException {
         var res = usersRepository.findById(id)
-                .orElseThrow(() -> new IllegalAccessError("User with id " + id + " not found"));
+                .orElseThrow(() -> new UserNotFoundException(id));
         return mapper.toUserDTO(res);
     }
 
-    public UserDTO.Query create(UserDTO.Create dto) {
-        var user = mapper.fromUserCreateDTO(dto);
-        var res = usersRepository.save(user);
-        return mapper.toUserDTO(res);
+    public UserDTO.Query create(UserDTO.Create dto) throws UserConflictException {
+        try {
+            var user = mapper.fromUserCreateDTO(dto);
+            var res = usersRepository.save(user);
+            return mapper.toUserDTO(res);
+        } catch (DataIntegrityViolationException e) {
+            if (UserConflictException.isEmailConflict(e)) {
+                throw new UserConflictException.Email();
+            }
+            if (UserConflictException.isUsernameConflict(e)) {
+                throw new UserConflictException.Username();
+            }
+
+            throw e;
+        }
+
     }
 
     public List<UserDTO.Query> createMany(List<UserDTO.Create> dtos) {
@@ -35,12 +51,24 @@ public class UsersService {
         return res.stream().map((user) -> mapper.toUserDTO(user)).toList();
     }
 
-    public UserDTO.Query update(String id, UserDTO.Update dto) {
+    public UserDTO.Query update(String id, UserDTO.Update dto) throws UserNotFoundException, UserConflictException {
         var user = usersRepository.findById(id)
-                .orElseThrow(() -> new IllegalAccessError("User with id " + id + " not found"));
+                .orElseThrow(() -> new UserNotFoundException(id));
         mapper.updateUser(dto, user);
-        var res = usersRepository.save(user);
-        return mapper.toUserDTO(res);
+        try {
+            var res = usersRepository.save(user);
+            return mapper.toUserDTO(res);
+        } catch (DataIntegrityViolationException e) {
+            if (UserConflictException.isEmailConflict(e)) {
+                throw new UserConflictException.Email();
+            }
+            if (UserConflictException.isUsernameConflict(e)) {
+                throw new UserConflictException.Username();
+            }
+
+            throw e;
+        }
+
     }
 
     // public List<UserDTO> updateMany(List<UserUpdateManyDTO> dtos) {

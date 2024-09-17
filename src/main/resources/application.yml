@@ -1,4 +1,7 @@
 spring:
+  mvc:
+    problemdetails:
+      enabled: true
   datasource:
     url: ${DB_URL}
   jpa:

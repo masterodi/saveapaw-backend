@@ -5,9 +5,15 @@ GET {{HOST}}/users/1007c0c0-b6a0-4e0d-9d28-b9a1f8abe100
 POST {{HOST}}/users
 Content-Type: application/json
 {
-    "email": "test1@test.test",
-    "username": "username1",
+    "email": "test2@test.test",
+    "username": "username2",
     "password": "password"
+}
+
+PATCH {{HOST}}/users/7f573bd5-d31f-4d9d-b076-5dd4d71a95b1
+Content-Type: application/json
+{
+    "username": "username1"
 }
 
 DELETE {{HOST}}/users
