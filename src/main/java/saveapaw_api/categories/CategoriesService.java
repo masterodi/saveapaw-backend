@@ -3,10 +3,15 @@ package saveapaw_api.categories;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import saveapaw_api.categories.exceptions.CategoryConflictException;
+import saveapaw_api.categories.exceptions.CategoryException;
+import saveapaw_api.categories.exceptions.CategoryNotFoundException;
 import saveapaw_api.shared.CrudService;
 import saveapaw_api.users.UsersRepository;
+import saveapaw_api.users.exceptions.UserNotFoundException;
 
 @Service
 public class CategoriesService
@@ -25,20 +30,32 @@ public class CategoriesService
     }
 
     @Override
-    public CategoryDTO.Query getOne(String id) {
-        var res = categoriesRepository.findById(id).orElseThrow(() -> new IllegalAccessError());
+    public CategoryDTO.Query getOne(String id) throws CategoryNotFoundException {
+        var res = categoriesRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
         return mapper.toCategoryDTO(res);
+
     }
 
     @Override
-    public CategoryDTO.Query create(CategoryDTO.Create dto) {
+    public CategoryDTO.Query create(CategoryDTO.Create dto) throws UserNotFoundException, CategoryConflictException {
         var userRef = usersRepository.getReferenceById(dto.created_by_id());
 
         var category = mapper.fromCategoryCreateDTO(dto);
         category.setCreatedBy(userRef);
-        var res = categoriesRepository.save(category);
+        try {
+            var res = categoriesRepository.save(category);
 
-        return mapper.toCategoryDTO(res);
+            return mapper.toCategoryDTO(res);
+        } catch (DataIntegrityViolationException e) {
+            if (CategoryException.isCreatedByNotFound(e)) {
+                throw new UserNotFoundException(dto.created_by_id());
+            }
+            if (CategoryException.isNameConflict(e)) {
+                throw new CategoryConflictException.Name();
+            }
+            throw e;
+        }
+
     }
 
     @Override
@@ -49,10 +66,20 @@ public class CategoriesService
     }
 
     @Override
-    public CategoryDTO.Query update(String id, CategoryDTO.Update dto) {
-        var category = categoriesRepository.findById(id).orElseThrow(() -> new IllegalAccessError());
+    public CategoryDTO.Query update(String id, CategoryDTO.Update dto)
+            throws CategoryNotFoundException, CategoryConflictException {
+        var category = categoriesRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
         mapper.updateCategory(dto, category);
-        return mapper.toCategoryDTO(category);
+        try {
+            categoriesRepository.save(category);
+            return mapper.toCategoryDTO(category);
+        } catch (DataIntegrityViolationException e) {
+            if (CategoryException.isNameConflict(e)) {
+                throw new CategoryConflictException.Name();
+            }
+            throw e;
+        }
+
     }
 
     @Override

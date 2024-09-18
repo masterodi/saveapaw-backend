@@ -25,8 +25,14 @@ GET {{HOST}}/categories/a35fde65-4e3f-41b0-842a-2076b8ef4c6e
 POST {{HOST}}/categories
 Content-Type: application/json
 {
-    "name": "category name 1", 
-    "created_by_id": "cc939987-0168-4814-b6ff-695e2436d07c"
+    "name": "category name 2", 
+    "created_by_id": "186d5859-338e-4b58-bf6f-7b0bc554a578"
+}
+
+PATCH {{HOST}}/categories/869395b6-0860-4e59-891f-9f03077a1c81
+Content-Type: application/json
+{
+    "name": "category name 3"
 }
 
 DELETE {{HOST}}/categories/a35fde65-4e3f-41b0-842a-2076b8ef4c6e
