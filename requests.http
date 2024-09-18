@@ -5,7 +5,7 @@ GET {{HOST}}/users/1007c0c0-b6a0-4e0d-9d28-b9a1f8abe100
 POST {{HOST}}/users
 Content-Type: application/json
 {
-    "email": "test2@test.test",
+    "email": "test3@test.test",
     "username": "username2",
     "password": "password"
 }

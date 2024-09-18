@@ -4,11 +4,8 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,29 +56,5 @@ public class CategoriesController {
     public ResponseEntity<Object> deleteById(@PathVariable String id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @ExceptionHandler
-    public ProblemDetail handleUserNotFoundException(UserNotFoundException e) {
-        var problemDetails = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
-        problemDetails.setTitle("User not found");
-
-        return problemDetails;
-    }
-
-    @ExceptionHandler
-    public ProblemDetail handleCategoryNotFoundException(CategoryNotFoundException e) {
-        var problemDetails = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
-        problemDetails.setTitle("Category not found");
-
-        return problemDetails;
-    }
-
-    @ExceptionHandler
-    public ProblemDetail handleCategoryConflictException(CategoryConflictException e) {
-        var problemDetails = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
-        problemDetails.setTitle("Category data conflict");
-
-        return problemDetails;
     }
 }

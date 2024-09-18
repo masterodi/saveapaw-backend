@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import saveapaw_api.users.exceptions.UserConflictException;
+import saveapaw_api.users.exceptions.UserException;
 import saveapaw_api.users.exceptions.UserNotFoundException;
 
 @Service
@@ -59,10 +60,10 @@ public class UsersService {
             var res = usersRepository.save(user);
             return mapper.toUserDTO(res);
         } catch (DataIntegrityViolationException e) {
-            if (UserConflictException.isEmailConflict(e)) {
+            if (UserException.isEmailConflict(e)) {
                 throw new UserConflictException.Email();
             }
-            if (UserConflictException.isUsernameConflict(e)) {
+            if (UserException.isUsernameConflict(e)) {
                 throw new UserConflictException.Username();
             }
 
@@ -70,19 +71,6 @@ public class UsersService {
         }
 
     }
-
-    // public List<UserDTO> updateMany(List<UserUpdateManyDTO> dtos) {
-    // List<String> ids = dtos.stream().map((dto) -> dto.id()).toList();
-    // var users = usersRepository.findAllById(ids);
-    // users.forEach((user) -> {
-    // var dto = dtos.stream().filter(x -> user.getId().equals(x.id())).findFirst();
-    // if (dto.isPresent()) {
-    // mapper.updateUser(dto.get(), user);
-    // }
-    // });
-    // var res = usersRepository.saveAll(users);
-    // return res.stream().map(user -> mapper.toUserDTO(user)).toList();
-    // }
 
     public void deleteAll() {
         usersRepository.deleteAll();
