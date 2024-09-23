@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import saveapaw_api.users.exceptions.UserConflictException;
+import saveapaw_api.users.exceptions.UserInvalidDataException;
 import saveapaw_api.users.exceptions.UserNotFoundException;
 
 @RestController
@@ -36,7 +36,7 @@ public class UsersController {
     }
 
     @PostMapping("")
-    public ResponseEntity<UserDTO.Query> create(@RequestBody UserDTO.Create payload) throws UserConflictException {
+    public ResponseEntity<UserDTO.Query> create(@RequestBody UserDTO.Create payload) throws UserInvalidDataException {
         var user = service.create(payload);
         URI location = URI.create(user.id());
         return ResponseEntity.created(location).body(user);
@@ -44,7 +44,7 @@ public class UsersController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<UserDTO.Query> update(@PathVariable String id, @RequestBody UserDTO.Update payload)
-            throws UserNotFoundException, UserConflictException {
+            throws UserNotFoundException, UserInvalidDataException {
         var user = service.update(id, payload);
         URI location = URI.create(user.id());
         return ResponseEntity.created(location).body(user);

@@ -4,19 +4,19 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import saveapaw_api.shared.Constraint;
 
-public abstract class UserConflictException extends UserException {
-    private UserConflictException(String message) {
+public class UserInvalidDataException extends UserException {
+    private UserInvalidDataException(String message) {
         super(message);
     }
 
-    public static class Email extends UserConflictException {
-        public Email() {
+    public static class EmailConflict extends UserInvalidDataException {
+        public EmailConflict() {
             super("Email is already taken");
         }
     }
 
-    public static class Username extends UserConflictException {
-        public Username() {
+    public static class UsernameConflict extends UserInvalidDataException {
+        public UsernameConflict() {
             super("Username is already taken");
         }
     }

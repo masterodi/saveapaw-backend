@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import saveapaw_api.categories.exceptions.CategoryInvalidDataException;
 import saveapaw_api.categories.exceptions.CategoryNotFoundException;
-import saveapaw_api.users.exceptions.UserConflictException;
+import saveapaw_api.users.exceptions.UserInvalidDataException;
 import saveapaw_api.users.exceptions.UserNotFoundException;
 
 @ControllerAdvice
@@ -21,8 +21,8 @@ public class GlobalControllerExceptionHandler {
         return problemDetails;
     }
 
-    @ExceptionHandler(UserConflictException.class)
-    public ProblemDetail handleUserConflictException(UserConflictException e) {
+    @ExceptionHandler(UserInvalidDataException.class)
+    public ProblemDetail handleUserInvalidDataException(UserInvalidDataException e) {
         var problemDetails = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
         problemDetails.setTitle("User data is invalid");
 

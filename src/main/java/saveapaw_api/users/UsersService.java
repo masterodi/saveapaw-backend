@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import saveapaw_api.users.exceptions.UserConflictException;
+import saveapaw_api.users.exceptions.UserInvalidDataException;
 import saveapaw_api.users.exceptions.UserNotFoundException;
 
 @Service
@@ -27,17 +27,17 @@ public class UsersService {
         return mapper.toUserDTO(res);
     }
 
-    public UserDTO.Query create(UserDTO.Create dto) throws UserConflictException {
+    public UserDTO.Query create(UserDTO.Create dto) throws UserInvalidDataException {
         try {
             var user = mapper.fromUserCreateDTO(dto);
             var res = usersRepository.save(user);
             return mapper.toUserDTO(res);
         } catch (DataIntegrityViolationException e) {
-            if (UserConflictException.isEmailConflict(e)) {
-                throw new UserConflictException.Email();
+            if (UserInvalidDataException.isEmailConflict(e)) {
+                throw new UserInvalidDataException.EmailConflict();
             }
-            if (UserConflictException.isUsernameConflict(e)) {
-                throw new UserConflictException.Username();
+            if (UserInvalidDataException.isUsernameConflict(e)) {
+                throw new UserInvalidDataException.UsernameConflict();
             }
 
             throw e;
@@ -51,7 +51,7 @@ public class UsersService {
         return res.stream().map((user) -> mapper.toUserDTO(user)).toList();
     }
 
-    public UserDTO.Query update(String id, UserDTO.Update dto) throws UserNotFoundException, UserConflictException {
+    public UserDTO.Query update(String id, UserDTO.Update dto) throws UserNotFoundException, UserInvalidDataException {
         var user = usersRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
         mapper.updateUser(dto, user);
@@ -59,11 +59,11 @@ public class UsersService {
             var res = usersRepository.save(user);
             return mapper.toUserDTO(res);
         } catch (DataIntegrityViolationException e) {
-            if (UserConflictException.isEmailConflict(e)) {
-                throw new UserConflictException.Email();
+            if (UserInvalidDataException.isEmailConflict(e)) {
+                throw new UserInvalidDataException.EmailConflict();
             }
-            if (UserConflictException.isUsernameConflict(e)) {
-                throw new UserConflictException.Username();
+            if (UserInvalidDataException.isUsernameConflict(e)) {
+                throw new UserInvalidDataException.UsernameConflict();
             }
 
             throw e;
