@@ -7,7 +7,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import saveapaw_api.users.exceptions.UserConflictException;
-import saveapaw_api.users.exceptions.UserException;
 import saveapaw_api.users.exceptions.UserNotFoundException;
 
 @Service
@@ -60,10 +59,10 @@ public class UsersService {
             var res = usersRepository.save(user);
             return mapper.toUserDTO(res);
         } catch (DataIntegrityViolationException e) {
-            if (UserException.isEmailConflict(e)) {
+            if (UserConflictException.isEmailConflict(e)) {
                 throw new UserConflictException.Email();
             }
-            if (UserException.isUsernameConflict(e)) {
+            if (UserConflictException.isUsernameConflict(e)) {
                 throw new UserConflictException.Username();
             }
 

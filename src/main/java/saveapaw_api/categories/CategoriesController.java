@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import saveapaw_api.categories.exceptions.CategoryConflictException;
+import saveapaw_api.categories.exceptions.CategoryInvalidDataException;
 import saveapaw_api.categories.exceptions.CategoryNotFoundException;
 import saveapaw_api.users.exceptions.UserNotFoundException;
 
@@ -38,7 +38,7 @@ public class CategoriesController {
 
     @PostMapping("")
     public ResponseEntity<CategoryDTO.Query> create(@RequestBody CategoryDTO.Create payload)
-            throws UserNotFoundException, CategoryConflictException {
+            throws UserNotFoundException, CategoryInvalidDataException {
         var category = service.create(payload);
         URI location = URI.create(category.id());
         return ResponseEntity.created(location).body(category);
@@ -46,7 +46,7 @@ public class CategoriesController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<CategoryDTO.Query> update(@PathVariable String id, @RequestBody CategoryDTO.Update payload)
-            throws CategoryNotFoundException, CategoryConflictException {
+            throws CategoryNotFoundException, CategoryInvalidDataException {
         var category = service.update(id, payload);
         URI location = URI.create(category.id());
         return ResponseEntity.created(location).body(category);

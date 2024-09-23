@@ -12,11 +12,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import saveapaw_api.shared.Constraint;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(name = UserConstraint.UNIQUE_EMAIL, columnNames = "email"),
-        @UniqueConstraint(name = UserConstraint.UNIQUE_USERNAME, columnNames = "username")
+        @UniqueConstraint(name = Constraint.USERS_UNIQUE_EMAIL, columnNames = "email"),
+        @UniqueConstraint(name = Constraint.USERS_UNIQUE_USERNAME, columnNames = "username")
 })
 public class User {
     @Id

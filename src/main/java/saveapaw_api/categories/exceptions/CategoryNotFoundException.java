@@ -11,4 +11,5 @@ public class CategoryNotFoundException extends CategoryException {
     public String getId() {
         return id;
     }
+
 }

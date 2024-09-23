@@ -15,11 +15,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import saveapaw_api.shared.Constraint;
 import saveapaw_api.users.User;
 
 @Entity
 @Table(name = "categories", uniqueConstraints = {
-        @UniqueConstraint(name = CategoryConstraint.UNIQUE_NAME, columnNames = "name")
+        @UniqueConstraint(name = Constraint.CATEGORIES_UNIQUE_NAME, columnNames = "name")
 })
 public class Category {
     @Id
@@ -35,7 +36,7 @@ public class Category {
     private LocalDate createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "created_by_id", nullable = false, foreignKey = @ForeignKey(name = CategoryConstraint.FK_CATEGORIES_USERS_ID))
+    @JoinColumn(name = "created_by_id", nullable = false, foreignKey = @ForeignKey(name = Constraint.FK_CATEGORIES_USERS_ID))
     private User createdBy;
 
     public String getId() {
