@@ -2,11 +2,14 @@ package saveapaw_api.users;
 
 import java.time.LocalDate;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,6 +40,10 @@ public class User {
     @CreationTimestamp
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate createdAt;
+
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("NORMAL")
+    private UserRole role;
 
     public User() {
     }
@@ -87,5 +94,13 @@ public class User {
 
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }
